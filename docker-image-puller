@@ -1,0 +1,15 @@
+#!/bin/bash
+IMAGE=$1
+
+if [[ -n "${AWS_ACCESS_KEY_ID}" || -n "${AWS_SESSION_TOKEN}" || -n "${AWS_CONFIG_FILE}" ]]; then
+  echo "INFO: logging into aws ecr with the credentials found in the environment"
+  aws ecr get-login | sh || exit 1
+fi
+
+if [[ -n "${IMAGE}" ]]; then
+  echo "INFO: pulling image ${IMAGE}"
+  docker pull $IMAGE
+else
+  >&2 echo "ERROR: image to pull not provided!"
+  exit 1
+fi
